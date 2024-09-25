@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/Dheepan3/sample-react-gapp/static/css/main.f855e6bc.css",
+    "main.js": "/Dheepan3/sample-react-gapp/static/js/main.74977ebe.js",
+    "static/js/453.a19a20af.chunk.js": "/Dheepan3/sample-react-gapp/static/js/453.a19a20af.chunk.js",
+    "static/media/logo.svg": "/Dheepan3/sample-react-gapp/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
+    "index.html": "/Dheepan3/sample-react-gapp/index.html",
+    "main.f855e6bc.css.map": "/Dheepan3/sample-react-gapp/static/css/main.f855e6bc.css.map",
+    "main.74977ebe.js.map": "/Dheepan3/sample-react-gapp/static/js/main.74977ebe.js.map",
+    "453.a19a20af.chunk.js.map": "/Dheepan3/sample-react-gapp/static/js/453.a19a20af.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.f855e6bc.css",
+    "static/js/main.74977ebe.js"
+  ]
+}
