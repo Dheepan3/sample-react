@@ -11,7 +11,7 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://in.pinterest.com/pin/637963103471997571/"
+          href="https://www.google.com/"
           target="_blank"
           rel="noopener noreferrer"
         >
