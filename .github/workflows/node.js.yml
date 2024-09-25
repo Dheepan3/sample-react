@@ -3,7 +3,7 @@
 
 permissions:
   contents: write
-  
+
 name: Node.js CI
 
 on:
