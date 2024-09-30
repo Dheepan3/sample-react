@@ -23,10 +23,10 @@ jobs:
       - name: Log in to DockerHub
         run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-      - name: Build Docker image
-        run: docker build -t my-react-app:latest .
+      - name: Pull Docker image
+        run: docker pull dheepans/sample-react-app:latest
 
       - name: Run Docker container
         run: |
-          docker run -d -p 3000:3000 --name react-app my-react-app:latest
+          docker run -p 3000:3000 dheepans/sample-react-app:latest
     
