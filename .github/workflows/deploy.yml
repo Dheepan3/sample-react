@@ -26,18 +26,18 @@ jobs:
       - name: Pull Docker image
         run: docker pull dheepans/sample-react-app:latest
 
-      - name: Run Docker container
-        run: |
-          docker run -d -p 3000:3000 dheepans/sample-react-app:latest
-
-      - name: Wait for Container to Start
-        run: sleep 30  # Optional, adjust based on app startup time
-
       - name: Notify Deployment Started to Google Chat
         run: |
           curl -X POST -H "Content-Type: application/json" \
           -d '{"text": "Deployment started for React App. Job: Deploy to Docker, Environment: Development, Branch: ${{ github.ref_name }}, Commit: ${{ github.sha }} - ${{ github.event.head_commit.message }}"}' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+      - name: Run Docker container in detached mode
+        run: |
+          docker run -d -p 3000:3000 dheepans/sample-react-app:latest
+
+      - name: Wait for Container to Start
+        run: sleep 30  # Optional, adjust based on app startup time
 
       - name: Notify Deployment Success to Google Chat
         if: success()
