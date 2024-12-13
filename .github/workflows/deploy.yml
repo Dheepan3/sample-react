@@ -17,15 +17,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
-
-      - name: Pull Docker image
-        run: docker pull dheepans/sample-react-app:latest
-
       - name: Notify Deployment Started to Google Chat
         run: |
           curl -X POST -H "Content-Type: application/json" \
@@ -46,6 +37,15 @@ jobs:
             }]
           }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+          
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Log in to DockerHub
+        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Pull Docker image
+        run: docker pull dheepans/sample-react-app:latest
 
       - name: Run Docker container in detached mode
         run: |
