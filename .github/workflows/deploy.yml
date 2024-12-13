@@ -37,7 +37,7 @@ jobs:
             }]
           }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-          
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
