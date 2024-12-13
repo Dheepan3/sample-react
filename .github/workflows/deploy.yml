@@ -30,14 +30,14 @@ jobs:
               "sections": [{
                 "widgets": [{
                   "textParagraph": {
-                    "text": "Deployment started for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                    "text": "Deployment started for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
                   }
                 }]
               }]
             }]
           }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-
+          
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -50,7 +50,6 @@ jobs:
       - name: Run Docker container in detached mode
         run: |
           docker run -d -p 3000:3000 dheepans/sample-react-app:latest
-
       - name: Wait for Container to Start
         run: sleep 30  # Optional, adjust based on app startup time
 
@@ -68,14 +67,14 @@ jobs:
               "sections": [{
                 "widgets": [{
                   "textParagraph": {
-                    "text": "Deployment to Docker completed successfully for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                    "text": "Deployment to Docker completed successfully for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
                   }
                 }]
               }]
             }]
           }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-
+          
       - name: Notify Deployment Failure to Google Chat
         if: failure()
         run: |
@@ -90,7 +89,7 @@ jobs:
               "sections": [{
                 "widgets": [{
                   "textParagraph": {
-                    "text": "Deployment to Docker failed for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                    "text": "Deployment to Docker failed for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
                   }
                 }]
               }]
