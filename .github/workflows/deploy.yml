@@ -29,4 +29,17 @@ jobs:
       - name: Run Docker container
         run: |
           docker run -p 3000:3000 dheepans/sample-react-app:latest
-    
+
+      - name: Notify Deployment Success to Google Chat
+        if: success()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"text": "Deployment to Docker completed successfully for React App!"}' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+      - name: Notify Deployment Failure to Google Chat
+        if: failure()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"text": "Deployment to Docker failed for React App."}' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
