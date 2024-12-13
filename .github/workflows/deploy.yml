@@ -29,7 +29,22 @@ jobs:
       - name: Notify Deployment Started to Google Chat
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"text": "Deployment started for React App. Job: Deploy to Docker, Environment: Development, Branch: ${{ github.ref_name }}, Commit: ${{ github.sha }} - ${{ github.event.head_commit.message }}"}' \
+          -d '{
+            "cards": [{
+              "header": {
+                "title": "Deployment Started",
+                "subtitle": "React App Deployment",
+                "imageUrl": "https://example.com/start-icon.png"
+              },
+              "sections": [{
+                "widgets": [{
+                  "textParagraph": {
+                    "text": "Deployment started for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                  }
+                }]
+              }]
+            }]
+          }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
       - name: Run Docker container in detached mode
@@ -43,12 +58,42 @@ jobs:
         if: success()
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"text": "Deployment to Docker completed successfully for React App. Job: Deploy to Docker, Environment: Development, Branch: ${{ github.ref_name }}, Commit: ${{ github.sha }} - ${{ github.event.head_commit.message }}"}' \
+          -d '{
+            "cards": [{
+              "header": {
+                "title": "Deployment Successful",
+                "subtitle": "React App Deployment",
+                "imageUrl": "https://example.com/success-icon.png"
+              },
+              "sections": [{
+                "widgets": [{
+                  "textParagraph": {
+                    "text": "Deployment to Docker completed successfully for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                  }
+                }]
+              }]
+            }]
+          }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
 
       - name: Notify Deployment Failure to Google Chat
         if: failure()
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"text": "Deployment to Docker failed for React App. Job: Deploy to Docker, Environment: Development, Branch: ${{ github.ref_name }}, Commit: ${{ github.sha }} - ${{ github.event.head_commit.message }}"}' \
+          -d '{
+            "cards": [{
+              "header": {
+                "title": "Deployment Failed",
+                "subtitle": "React App Deployment",
+                "imageUrl": "https://example.com/failure-icon.png"
+              },
+              "sections": [{
+                "widgets": [{
+                  "textParagraph": {
+                    "text": "Deployment to Docker failed for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: ${{ github.ref_name }}\nCommit: ${{ github.sha }}\nMessage: ${{ github.event.head_commit.message }}"
+                  }
+                }]
+              }]
+            }]
+          }' \
           ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
