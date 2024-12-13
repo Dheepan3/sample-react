@@ -14,6 +14,12 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Notify Deployment Started to Google Chat
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"text": "Deployment to Docker has started for React App."}' \
+          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -28,7 +34,10 @@ jobs:
 
       - name: Run Docker container
         run: |
-          docker run -p 3000:3000 dheepans/sample-react-app:latest
+          docker run -d -p 3000:3000 dheepans/sample-react-app:latest
+
+      - name: Wait for Container to Start
+        run: sleep 30  # Optional, adjust based on app startup time
 
       - name: Notify Deployment Success to Google Chat
         if: success()
