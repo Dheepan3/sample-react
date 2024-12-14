@@ -30,7 +30,7 @@ jobs:
          git pull
          docker rm -f dheepan_react_container
          docker build -t dheepan_react .
-         docker run -itd --name dheepan_react_container -p 3000:80 dheepan_react
+         docker run -itd --name dheepan_react_container -p 3000:3000 dheepan_react
 
       - name: Notify Success
 
