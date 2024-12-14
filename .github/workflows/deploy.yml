@@ -1,6 +1,3 @@
-permissions:
-  contents: write
-
 name: Deploy React App to Self-Hosted Runner
 
 on:
@@ -8,91 +5,51 @@ on:
     branches:
       - main
 
-jobs:
-  deploy:
-    name: Deploy to Docker on Self-Hosted Runner
+jobs:  
+  build:
     runs-on: self-hosted
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Notify Deployment Started to Google Chat
+      - name: Notify Start
+
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-            "cards": [{
-              "header": {
-                "title": "Deployment Started",
-                "subtitle": "React App Deployment",
-                "imageUrl": "https://example.com/start-icon.png"
-              },
-              "sections": [{
-                "widgets": [{
-                  "textParagraph": {
-                    "text": "Deployment started for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
-                  }
-                }]
-              }]
-            }]
-          }' \
-          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-          
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
 
-      - name: Log in to DockerHub
-        run: echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          cd /home/dheepan-s/builder/notify
 
-      - name: Pull Docker image
-        run: docker pull dheepans/sample-react-app:latest
+          bash started.sh "$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')" "Development"  "${{ github.ref_name }}" "${{ github.event.pusher.name }}" "${{ github.event.head_commit.message }}" "${{ github.repository }}"
 
-      - name: Run Docker container in detached mode
+      - name: Install dependencies
         run: |
-          docker run -d -p 3000:3000 dheepans/sample-react-app:latest
-      - name: Wait for Container to Start
-        run: sleep 30  # Optional, adjust based on app startup time
+         cd /home/dheepan-s/sample-react-gapp
+         git stash
+         git fetch
+         git checkout "${{ github.ref_name }}"
+         git pull
+         docker rm -f dheepan_react
+         docker build -t dheepan_react .
+         docker run -itd --name dheepan_react_container -p 3000:3000 dheepan_react
 
-      - name: Notify Deployment Success to Google Chat
+      - name: Notify Success
+
         if: success()
+
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-            "cards": [{
-              "header": {
-                "title": "Deployment Successful",
-                "subtitle": "React App Deployment",
-                "imageUrl": "https://example.com/success-icon.png"
-              },
-              "sections": [{
-                "widgets": [{
-                  "textParagraph": {
-                    "text": "Deployment to Docker completed successfully for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
-                  }
-                }]
-              }]
-            }]
-          }' \
-          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
-          
-      - name: Notify Deployment Failure to Google Chat
+
+          cd /home/dheepan-s/builder/notify
+
+          bash complete.sh "$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')" "Development" "${{ github.ref_name }}" "${{ github.event.pusher.name }}" "${{ github.event.head_commit.message }}" "${{ github.repository }}" "${{ github.run_started }}" "${{ github.run_id }}"
+
+
+
+      - name: Notify Failure
+
         if: failure()
+
         run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d '{
-            "cards": [{
-              "header": {
-                "title": "Deployment Failed",
-                "subtitle": "React App Deployment",
-                "imageUrl": "https://example.com/failure-icon.png"
-              },
-              "sections": [{
-                "widgets": [{
-                  "textParagraph": {
-                    "text": "Deployment to Docker failed for React App.\n\nJob: Deploy to Docker\nEnvironment: Development\nBranch: main\nCommit: dheepan3\nMessage: Updated the workflow file"
-                  }
-                }]
-              }]
-            }]
-          }' \
-          ${{ secrets.GOOGLE_CHAT_WEBHOOK_URL }}
+
+          cd /home/dheepan-s/builder/notify
+
+          bash failed.sh "$(echo "${{ github.ref }}" | awk -F'/' '{print $3}')" "Development" "${{ github.ref_name }}" "${{ github.event.pusher.name }}" "${{ github.event.head_commit.message }}" "${{ github.repository }}"
